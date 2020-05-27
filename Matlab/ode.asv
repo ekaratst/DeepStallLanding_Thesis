@@ -77,12 +77,12 @@ CM = CM0 + CMalpha * x;
 
 %time interval and initial conditions
 t_interval = [0,1000];
-init_cond = [10,5*pi/180,0,10*pi/180,15,30]';
+init_cond = [10,5,0,0,0,0]';
 %solution
 [t,y] = ode45(@(t,Y) odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy) , t_interval , init_cond);
 %plot
-plot(t,y(:,1),'b',t,y(:,2),'r');
-
+% plot(t,y(:,1),'b',t,y(:,2),'r');
+y
 
 function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy)
 dYdt = [    (-(1/2 * density_air * S .* Y(1).^2 .* (CD + ((CDq .* mean_chord.*Y(3)) ./ (2.*Y(1))) .* CDdelta.*delta))) - (m*g*sin(Y(2))); 
