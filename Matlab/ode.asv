@@ -20,10 +20,11 @@ CMdelta = -0.325;
 alpha0 = 20*pi/180;
 M = 50;
 delta = 20*pi/180;
+T = 0;
 
 % x_degrees = linspace(-10,180);
 x_degrees = 30;
-x = x_degrees.*pi./180;
+x = x_degrees*pi/180;
 %x_degrees = [-10 -5 0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90];
 
 sigma = ((1 + exp(-M*(x - alpha0)) + exp(M*(x + alpha0))) ./ ((1 + exp(-M*(x - alpha0))) .* (1 + exp(M*(x + alpha0)))));
@@ -42,54 +43,57 @@ CM = CM0 + CMalpha * x;
 % D = 1/2 * density_air * S .* V.^2 .* (CD + ((CDq .* mean_chord.*q) ./ (2.*V)) .* CDdelta.*delta);
 % M = 1/2 * density_air * S .* V.^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*q) ./ (2.*V)) .* CMdelta.*delta);
 
-% syms t x a
-% g = @(t,x,a)[-x(1)+a*x(3);-x(2)+2*x(3);x(1)^2-2*x(3)];
-% for a = 0:2
-% [t,xa] = ode45(@(t,x) g(t,x,a),[0 1.5],[1 1/2 3]);
-% figure
-% plot(t,xa(:,2))
-% title(['y(t) for a=',num2str(a)'])
-% end
-
-
-% syms t x
-% L = (1/2 * density_air * S .* x(1).^2 .* (CL + ((CLq .* mean_chord.*x(3)) ./ (2.*x(1))) .* CLdelta.*delta));
-% D = (1/2 * density_air * S .* x(1).^2 .* (CD + ((CDq .* mean_chord.*x(3)) ./ (2.*x(1))) .* CDdelta.*delta));
-% M = (1/2 * density_air * S .* x(1).^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*x(3)) ./ (2.*x(1))) .* CMdelta.*delta));
-% equation_of_motion = @(t,x)[(-(1/2 * density_air * S .* x(1).^2 .* (CD + ((CDq .* mean_chord.*x(3)) ./ (2.*x(1))) .* CDdelta.*delta))) - (m*g*sin(x(2))); 
-%     (1/2 * density_air * S .* x(1).^2 .* (CL + ((CLq .* mean_chord.*x(3)) ./ (2.*x(1))) .* CLdelta.*delta)) - (m*g*sin(x(2))); 
-%     (1/2 * density_air * S .* x(1).^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*x(3)) ./ (2.*x(1))) .* CMdelta.*delta))./Iyy; 
-%     x(3); 
-%     x(1)*sin(x(2)); 
-%     x(1)*cos(x(2))];
-% equation_of_motion = @(t,x)[(-D) - (m*g*sin(x(2))); 
-%     L - (m*g*sin(x(2))); 
-%     M./Iyy; 
-%     x(3); 
-%     x(1)*sin(x(2)); 
-%     x(1)*cos(x(2))];
-% [t,x1] = ode45(@(t,x) equation_of_motion(t,x), [0 2], [1,2,3]);
-% figure
-% plot(t,x1(:,2))
-% title(['y(t)'])
-
-
-
 %time interval and initial conditions
-t_interval = [0,1000];
-init_cond = [10,5,0,0,0,0]';
+t_interval = [0,20];
+% init_cond = [8, -5*pi/180, -5*pi/180, -15, 0, 0]; 
+init_cond = [8, 0, 0, 0, 0, 0]; 
+% [aircraft velocity, angle of descent, pitch angle, pitch rate, height, horizontal distance]
 %solution
-[t,y] = ode45(@(t,Y) odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy) , t_interval , init_cond);
-%plot
-% plot(t,y(:,1),'b',t,y(:,2),'r');
-y
+[t,y] = ode45(@(t,Y) odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x) , t_interval , init_cond);
 
-function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy)
-dYdt = [    (-(1/2 * density_air * S .* Y(1).^2 .* (CD + ((CDq .* mean_chord.*Y(3)) ./ (2.*Y(1))) .* CDdelta.*delta))) - (m*g*sin(Y(2))); 
-            (1/2 * density_air * S .* Y(1).^2 .* (CL + ((CLq .* mean_chord.*Y(3)) ./ (2.*Y(1))) .* CLdelta.*delta)) - (m*g*sin(Y(2))); 
-            (1/2 * density_air * S .* Y(1).^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*Y(3)) ./ (2.*Y(1))) .* CMdelta.*delta))./Iyy; 
+% plot(t,y(:,1),'b',t,y(:,2),'r');
+
+subplot(3,2,1);
+plot(y(:,6),y(:,5)); %vetical distance(y-axis)-horizontal distance(x-axis)
+xlabel('Horizontal Distance [m]') 
+ylabel('Vetical Distance [m]') 
+title('Simulated DSL Trajectory')
+legend("8 m/s")
+
+subplot(3,2,2);
+plot(t,y(:,1))
+xlabel('Time') 
+ylabel('V [m/s]') 
+title('DSL Velocity')
+legend("8 m/s")
+
+subplot(3,2,3);
+plot(t,y(:,2))
+xlabel('Time') 
+ylabel('gramma') 
+title('DSL Angle of Descent')
+legend("8 m/s")
+
+subplot(3,2,4);
+plot(t,y(:,3))
+xlabel('Time') 
+ylabel('theta') 
+title('DSL Pitch Angle')
+legend("8 m/s")
+
+subplot(3,2,5);
+plot(t,y(:,4))
+xlabel('Time') 
+ylabel('q') 
+title('DSL Pitch rate')
+legend("8 m/s")
+
+function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x)
+dYdt = [    (T*cos(x)) - (1/2 * density_air * S .* Y(1).^2 .* (CD + ((CDq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CDdelta.*delta)) - (m*g*sin(Y(2))); 
+            (T*sin(x)) + (1/2 * density_air * S .* Y(1).^2 .* (CL + ((CLq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CLdelta.*delta)) - (m*g*cos(Y(2))); 
+            (1/2 * density_air * S .* Y(1).^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CMdelta.*delta)) ./ Iyy; 
             Y(3); 
             Y(1)*sin(Y(2)); 
-            Y(1)*cos(Y(2))];
+            Y(1)*cos(Y(2)];
 end
 
