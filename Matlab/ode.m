@@ -1,22 +1,12 @@
 
 %-------------------------------------AOA----------------------------------------------------------------------------------
-x_degrees_aoa = [-10 -5 0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90];
-x_aoa = x_degrees_aoa*pi/180;
-sigma_aoa = ((1 + exp(-M*(x_aoa - alpha0)) + exp(M*(x_aoa + alpha0))) ./ ((1 + exp(-M*(x_aoa - alpha0))) .* (1 + exp(M*(x_aoa + alpha0)))));
-CL_aoa = (1 - sigma_aoa).*(CL0 + CLalpha.*x_aoa) + sigma_aoa.*(2.*sign(x_aoa).*sin(x_aoa).^2 .* cos(x_aoa));
-CLreg_aoa = CL0 + CLalpha .* x_aoa;
-CLdsl_aoa = 2*sign(x_aoa).*(sin(x_aoa).^2) .* cos(x_aoa);
-CD_aoa = CD0 + (1 - sigma_aoa) .* K .* (CL0 + CLalpha.*x_aoa).^2 + sigma_aoa .* (2.*sign(x_aoa).*sin(x_aoa).^3);
-CDreg_aoa = CD0 + K .* (CL0 + CLalpha .* x_aoa) .^2;
-CDdsl_aoa = 2*sign(x_aoa).*(sin(x_aoa).^3);
-CM_aoa = CM0 + CMalpha * x_aoa;
-%-------------------------------------ODE----------------------------------------------------------------------------------
+ %-------------------------------------ODE----------------------------------------------------------------------------------
 % x_degrees = linspace(-10,180);
 % index_figure = 1;
 % for i = 1:1
 %     x_degrees = [0, 5, 10, 15];
 %     x = x_degrees(i)*pi/180; %aoa
-%     t_interval = [0,10];
+%     t_interval = [0,10]; 
 %     aircraft_velocity = 8;
 %     pitch_rate = 0;
 %     height = 0;
@@ -160,9 +150,9 @@ function [t,y] = solve_ode(acv)
     g = 9.81;
     density_air = 1.225;
     S = 0.28;
-    mean_chord = 1.3;
+    mean_chord = 0.31;
     CL0 = 0.062;
-    CLalpha = 6.09;
+    CLalpha = 6.098;
     CD0 = 0.098;
     K = 0.012;
     CM0 = 0.028;
@@ -177,13 +167,13 @@ function [t,y] = solve_ode(acv)
     M = 50;
     delta = -67*pi/180;
     T = 0;
-    x_degrees = 0;
+    x_degrees = 0; %<<<-----------------------
     x = x_degrees*pi/180; %aoa
     aircraft_velocity = acv;
     pitch_rate = 0;
     height = 0;
     horizontal_distance = 0;
-    angle_of_descent = 0*pi/180;
+    angle_of_descent = 0*pi/180; %<<<-----------------------
     pitch_angle = x + angle_of_descent;
     %-----------------------equations-------------------------------------------------------------------
     sigma = ((1 + exp(-M*(x - alpha0)) + exp(M*(x + alpha0))) ./ ((1 + exp(-M*(x - alpha0))) .* (1 + exp(M*(x + alpha0)))));

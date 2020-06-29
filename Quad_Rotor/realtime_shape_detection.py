@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import imutils
 
 
 
@@ -52,15 +53,24 @@ while True:
         y = approx.ravel()[1]
 
         if area > 400:
+            
             cv2.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+            
 
             if len(approx) == 3:
                 cv2.putText(frame, "Triangle", (x, y), font, 1, (0, 0, 0))
             elif len(approx) == 4:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
+                M = cv2.moments(cnt)
+                cX = int(M["m10"] / M["m00"])
+                cY = int(M["m01"] / M["m00"])
+                cv2.drawContours(frame, [cnt], -1, (0, 255, 0), 2)
+                cv2.circle(frame, (cX, cY), 7, (255, 255, 255), -1)
+                cv2.putText(frame, "center", (cX - 20, cY - 20),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
             elif 10 < len(approx) < 20:
                 cv2.putText(frame, "Circle", (x, y), font, 1, (0, 0, 0))
-
+      
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
