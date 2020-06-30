@@ -138,7 +138,7 @@ for j = delta
     hold off
 
 %     sgtitle(sprintf('AOA=%d, Angle of descent=%d, Pitch angle=%d',0,0,0))
-    sgtitle(sprintf('Elevator Angle=%d \n AOA=%d, Angle of descent=%d, Pitch angle=%d',j, aoa, gramma, aoa+gramma))
+    sgtitle(sprintf('Elevator Angle=%d',delta))
     figure_number = figure_number + 1;
 end
 
