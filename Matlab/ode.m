@@ -74,7 +74,7 @@
 figure_number = 1;
 aoa = 0;
 gramma = 0;
-delta = [-30, -50, -70];
+delta = [0,-10,-20,-30, -50, -70];
 for j = delta
     figure(figure_number)
     subplot(3,2,1);
