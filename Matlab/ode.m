@@ -74,73 +74,157 @@
 figure_number = 1;
 aoa = 0;
 gramma = 0;
-delta = [0,-10,-20,-30, -50, -70];
+delta = [0,-25,-50,-75];
+% delta = -50;
+% for j = delta
+%     figure(figure_number)
+%     subplot(3,2,1);
+%     hold on
+%     for i = [8,12,16,20]
+%         [t,y] = solve_ode(i,j,aoa,gramma);
+%         plot(y(:,6),y(:,5)); %vetical distance(y-axis)-horizontal distance(x-axis)
+%     end
+%     xlabel('Horizontal Distance [m]') 
+%     ylabel('Vetical Distance [m]') 
+%     title('Simulated DSL Trajectory')
+%     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s') 
+%     yline(0) 
+%     hold off
+%     
+%     subplot(3,2,2);
+%     hold on
+%     for i = [8,12,16,20]
+%         [t,y] = solve_ode(i,j,aoa,gramma);
+%         plot(t,y(:,1))
+%     end
+%     xlabel('Time') 
+%     ylabel('V [m/s]') 
+%     title('DSL Velocity')
+%     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
+%     hold off
+% 
+%     subplot(3,2,3);
+%     hold on
+%     for i = [8,12,16,20]
+%         [t,y] = solve_ode(i,j,aoa,gramma);
+%         plot(t,y(:,2))
+%     end
+%     xlabel('Time') 
+%     ylabel('gramma') 
+%     title('DSL Angle of Descent')
+%     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
+%     hold off
+% 
+%     subplot(3,2,4);
+%     hold on
+%     for i = [8,12,16,20]
+%         [t,y] = solve_ode(i,j,aoa,gramma);
+%         plot(t,y(:,3))
+%     end
+%     xlabel('Time') 
+%     ylabel('theta') 
+%     title('DSL Pitch Angle')
+%     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
+%     hold off
+% 
+%     subplot(3,2,5);
+%     hold on
+%     for i = [8,12,16,20]
+%         [t,y] = solve_ode(i,j,aoa,gramma);
+%         plot(t,y(:,4))
+%     end
+%     xlabel('Time') 
+%     ylabel('q') 
+%     title('DSL Pitch rate')
+%     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
+%     hold off
+% 
+% %     sgtitle(sprintf('AOA=%d, Angle of descent=%d, Pitch angle=%d',0,0,0))
+%     sgtitle(sprintf('Elevator Angle=%d \n AOA=%d, Angle of descent=%d, Pitch angle=%d',j, aoa, gramma, aoa+gramma))
+%     figure_number = figure_number + 1;
+% end
+k=1;
+figure(1);
 for j = delta
-    figure(figure_number)
-    subplot(3,2,1);
-    hold on
+    subplot(4,1,k);
+    hold on 
     for i = [8,12,16,20]
         [t,y] = solve_ode(i,j,aoa,gramma);
-        plot(y(:,6),y(:,5)); %vetical distance(y-axis)-horizontal distance(x-axis)
+        plot(y(:,6),y(:,5)); 
     end
     xlabel('Horizontal Distance [m]') 
     ylabel('Vetical Distance [m]') 
-    title('Simulated DSL Trajectory')
+    title("Simulated DSL Trajectory (Delta = " + j + ")")
     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
+    yline(0); 
     hold off
-
-    subplot(3,2,2);
-    hold on
+    k = k +1;
+end
+k=1;
+figure(2);
+for j = delta
+    subplot(4,1,k);
+    hold on 
     for i = [8,12,16,20]
         [t,y] = solve_ode(i,j,aoa,gramma);
         plot(t,y(:,1))
     end
     xlabel('Time') 
-    ylabel('V [m/s]') 
-    title('DSL Velocity')
+    ylabel('V [m/s]')
+    title("DSL Velocity (Delta = " + j + ")")
     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
     hold off
-
-    subplot(3,2,3);
-    hold on
+    k = k +1;
+end
+k=1;
+figure(3);
+for j = delta
+    subplot(4,1,k);
+    hold on 
     for i = [8,12,16,20]
         [t,y] = solve_ode(i,j,aoa,gramma);
         plot(t,y(:,2))
     end
     xlabel('Time') 
-    ylabel('gramma') 
-    title('DSL Angle of Descent')
+    ylabel('gramma')
+    title("DSL Angle of Descent (Delta = " + j + ")")
     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
     hold off
-
-    subplot(3,2,4);
-    hold on
+    k = k +1;
+end
+k=1;
+figure(4);
+for j = delta
+    subplot(4,1,k);
+    hold on 
     for i = [8,12,16,20]
         [t,y] = solve_ode(i,j,aoa,gramma);
         plot(t,y(:,3))
     end
     xlabel('Time') 
-    ylabel('theta') 
-    title('DSL Pitch Angle')
+    ylabel('theta')
+    title("DSL Pitch Angle (Delta = " + j + ")")
     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
     hold off
-
-    subplot(3,2,5);
-    hold on
+    k = k +1;
+end
+k=1;
+figure(5);
+for j = delta
+    subplot(4,1,k);
+    hold on 
     for i = [8,12,16,20]
         [t,y] = solve_ode(i,j,aoa,gramma);
         plot(t,y(:,4))
     end
     xlabel('Time') 
-    ylabel('q') 
-    title('DSL Pitch rate')
+    ylabel('q')
+    title("DSL Pitch rate (Delta = " + j + ")")
     legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
     hold off
-
-%     sgtitle(sprintf('AOA=%d, Angle of descent=%d, Pitch angle=%d',0,0,0))
-    sgtitle(sprintf('Elevator Angle=%d \n AOA=%d, Angle of descent=%d, Pitch angle=%d',j, aoa, gramma, aoa+gramma))
-    figure_number = figure_number + 1;
+    k = k +1;
 end
+% 	(fig,'DSL_Trajectory.png') 
 
 function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x)
 dYdt = [    (T*cos(x)) - (1/2 * density_air * S .* Y(1).^2 .* (CD + ((CDq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CDdelta.*delta)) - (m*g*sin(Y(2))); 
@@ -179,7 +263,7 @@ function [t,y] = solve_ode(acv,elevator_angle,aoa,gramma)
     x = x_degrees*pi/180; %aoa
     aircraft_velocity = acv;
     pitch_rate = 0;
-    height = 0;
+    height = 15;
     horizontal_distance = 0;
     angle_of_descent = gramma*pi/180; %<<<-----------------------
     pitch_angle = x + angle_of_descent;
@@ -192,6 +276,7 @@ function [t,y] = solve_ode(acv,elevator_angle,aoa,gramma)
     t_interval = [0,10];
     %solution
     [t,y] = ode45(@(t,Y) odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x) , t_interval , [aircraft_velocity, angle_of_descent, pitch_angle, pitch_rate, height, horizontal_distance]);
+    
 end     
 
 
