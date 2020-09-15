@@ -1,4 +1,4 @@
-function dy = longitudinal_equation(t,y)
+function dy = longitudinal_equation(t,y,elavator_angle)
 dy = zeros(6,1);
 V = y(1);
 gramma = y(2);
@@ -8,12 +8,11 @@ h = y(5);
 r = y(6);
 
 convert_to_rad = pi/180;
-convert_to_degree = 180/pi;
 
 %---------input--------------------------------
 alpha0 = 20 * convert_to_rad;
 alpha = theta* convert_to_rad - gramma* convert_to_rad; % alpha > alpha0(20)
-delta = -45 * convert_to_rad;
+delta = elavator_angle * convert_to_rad;
 T = 0;
 %-----------------------------------------------
 
