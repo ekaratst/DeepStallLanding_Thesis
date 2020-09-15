@@ -73,12 +73,11 @@
 %------------------------------------ODE------------------------------------------------------------------------------------
 figure_number = 1;
 %Theta-gramma=alpha(aoa)
-theta = 20;
-gramma = -30;
+theta = 30;
+gramma = -18;
 aoa = theta - gramma;
 % delta = [0,-25,-50,-75];
-delta = [0,-15,-45,-70];
-% delta = -50;
+% delta = [0,-15,-45,-70];  %useeee
 % for j = delta
 %     figure(figure_number)
 %     subplot(3,2,1);
@@ -148,18 +147,26 @@ delta = [0,-15,-45,-70];
 % end
 k=1;
 figure(1);
-for j = delta
-    subplot(4,1,k);
+delta_val = [-4, -10, -16];
+vel = [11,12,13];
+for j = 1:3
+    
+%     subplot(4,1,k);
     hold on 
-    for i = 1:4
-        vel = [8,12,16,20];
-        [t,y] = solve_ode(vel(i),j,aoa,gramma,theta);
-        plot(y(:,6),y(:,5)); 
-    end
+%     for i = 1:3
+%         vel = [11,12,13];
+%         [t,y] = solve_ode(vel(i),j,aoa,gramma,theta);
+% %         plot(y(:,6),y(:,5)); 
+%         plot(y(:,5), y(:,6)); %x-y
+%     end
+   
+    [t,y] = solve_ode(vel(j),delta_val(j),aoa,gramma,theta);
+%         plot(y(:,6),y(:,5)); 
+    plot(y(:,5), y(:,6)); %x-y
     xlabel('Horizontal Distance [m]') 
     ylabel('Vetical Distance [m]') 
-    title("Simulated DSL Trajectory (Delta = " + j + ")")
-    legend('8 m/s', '12 m/s', '16 m/s', '20 m/s')
+    title("Simulated DSL Trajectory (Delta = " + delta_val(j) + ")")
+    legend('11 m/s', '12 m/s', '13 m/s')
 %     yline(0); 
     hold off
     k = k +1;
@@ -229,24 +236,24 @@ end
 %     k = k +1;
 % end
 
-function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x)
-dYdt = [    (T*cos(x)) - (1/2 * density_air * S .* Y(1).^2 .* (CD + ((CDq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CDdelta.*delta)) - (m*g*sin(Y(2))); 
-            (T*sin(x)) + (1/2 * density_air * S .* Y(1).^2 .* (CL + ((CLq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CLdelta.*delta)) - (m*g*cos(Y(2))); 
-            (1/2 * density_air * S .* Y(1).^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CMdelta.*delta)) ./ Iyy; 
-            Y(3); 
-            Y(1)*sin(Y(2)); 
-            Y(1)*cos(Y(2))];
+function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iy,T,x)
+dYdt = [    ((T*cos(x)) - (1/2 * density_air * S * Y(1)^2 * (1.4*(sin(x)^2 + 0.1))) - (m*g*sin(Y(2)))) / m; 
+            ((T*sin(x)) + (1/2 * density_air * S * Y(1)^2 * (0.8*sin(2*x))) - (m*g*cos(Y(2)))) / m*Y(1); 
+            Y(4); 
+            (-1/2*density_air*Y(1)^2*0.041*(-0.5)*((0.8*cos(x)*sin(2*x+2*delta)) + (1.4*sin(x)*(sin(x+delta))^2) + 0.1*sin(x))) / Iy;
+            Y(1)*cos(Y(2))
+            Y(1)*sin(Y(2))];
 end
 
 function [t,y] = solve_ode(acv,elevator_angle,aoa,gramma,theta)
     %-----------------------parameters-------------------------------------------------------------------
 %     aoa = -1*aoa;
 %     gramma = -1*gramma;
-    Iyy = 0.388;
-    m = 1.5;
+    Iy = 0.1;
+    m = 0.8;
     g = 9.81;
     density_air = 1.225;
-    S = 0.28;
+    S = 0.25;
     mean_chord = 0.31;
     CL0 = 0.062;
     CLalpha = 6.098;
@@ -277,12 +284,14 @@ function [t,y] = solve_ode(acv,elevator_angle,aoa,gramma,theta)
     %-----------------------equations-------------------------------------------------------------------
     sigma = ((1 + exp(-M*(x - alpha0)) + exp(M*(x + alpha0))) ./ ((1 + exp(-M*(x - alpha0))) .* (1 + exp(M*(x + alpha0)))));
     CL = (1 - sigma).*(CL0 + CLalpha.*x) + sigma.*(2.*sign(x).*sin(x).^2 .* cos(x));
+%     CL = 2.*sign(x).*sin(x).^2 .* cos(x);
     CD = CD0 + (1 - sigma) .* K .* (CL0 + CLalpha.*x).^2 + sigma .* (2.*sign(x).*sin(x).^3);
+%     CD = 2.*sign(x).*sin(x).^3;
     CM = CM0 + CMalpha * x;
     %time interval
-    t_interval = [0,10];
+    t_interval = [0,1];
     %solution
-    [t,y] = ode45(@(t,Y) odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x) , t_interval , [aircraft_velocity, angle_of_descent, pitch_angle, pitch_rate, height, horizontal_distance]);
+    [t,y] = ode45(@(t,Y) odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iy,T,x) , t_interval , [aircraft_velocity, angle_of_descent, pitch_angle, pitch_rate, horizontal_distance, height]);
     
 end     
 

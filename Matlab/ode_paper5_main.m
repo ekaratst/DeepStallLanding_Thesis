@@ -74,11 +74,11 @@
 figure_number = 1;
 %Theta-gramma=alpha(aoa)
 theta = 30;
-gramma = -30;
+gramma = -20;
 aoa = theta - gramma;
 % delta = [0,-25,-50,-75];
-delta = [0,-15,-45,-70];
-% delta = -50;
+% delta = [0,-15,-45,-70];  %useeee
+delta = -5;
 % for j = delta
 %     figure(figure_number)
 %     subplot(3,2,1);
@@ -149,7 +149,7 @@ delta = [0,-15,-45,-70];
 k=1;
 figure(1);
 for j = delta
-    subplot(4,1,k);
+%     subplot(4,1,k);
     hold on 
     for i = 1:4
         vel = [8,12,16,20];
@@ -230,9 +230,9 @@ end
 % end
 
 function dYdt = odefcn(t,Y,density_air,S,CL,CLq,mean_chord,CLdelta,delta,CD,CDq,CDdelta,CM,CMq,CMdelta,m,g,Iyy,T,x)
-dYdt = [    (T*cos(x)) - (1/2 * density_air * S .* Y(1).^2 .* (CD + ((CDq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CDdelta.*delta)) - (m*g*sin(Y(2))); 
-            (T*sin(x)) + (1/2 * density_air * S .* Y(1).^2 .* (CL + ((CLq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CLdelta.*delta)) - (m*g*cos(Y(2))); 
-            (1/2 * density_air * S .* Y(1).^2 .* mean_chord .* (CM + ((CMq .* mean_chord.*Y(3)) ./ (2.*Y(1))) + CMdelta.*delta)) ./ Iyy; 
+dYdt = [    ((T*cos(x)) - (1/2 * density_air * S * Y(1)^2 * (CD + ((CDq * mean_chord*Y(3)) / (2*Y(1))) + CDdelta*delta)) - (m*g*sin(Y(2)))) / m; 
+            ((T*sin(x)) + (1/2 * density_air * S * Y(1)^2 * (CL + ((CLq * mean_chord*Y(3)) / (2*Y(1))) + CLdelta*delta)) - (m*g*cos(Y(2)))) / m*Y(1); 
+            (1/2 * density_air * S * Y(1)^2 * mean_chord * (CM + ((CMq * mean_chord*Y(3)) / (2*Y(1))) + CMdelta*delta)) / Iyy; 
             Y(3); 
             Y(1)*sin(Y(2)); 
             Y(1)*cos(Y(2))];
@@ -277,7 +277,9 @@ function [t,y] = solve_ode(acv,elevator_angle,aoa,gramma,theta)
     %-----------------------equations-------------------------------------------------------------------
     sigma = ((1 + exp(-M*(x - alpha0)) + exp(M*(x + alpha0))) ./ ((1 + exp(-M*(x - alpha0))) .* (1 + exp(M*(x + alpha0)))));
     CL = (1 - sigma).*(CL0 + CLalpha.*x) + sigma.*(2.*sign(x).*sin(x).^2 .* cos(x));
+%     CL = 2.*sign(x).*sin(x).^2 .* cos(x);
     CD = CD0 + (1 - sigma) .* K .* (CL0 + CLalpha.*x).^2 + sigma .* (2.*sign(x).*sin(x).^3);
+%     CD = 2.*sign(x).*sin(x).^3;
     CM = CM0 + CMalpha * x;
     %time interval
     t_interval = [0,10];
