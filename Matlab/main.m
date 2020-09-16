@@ -1,11 +1,11 @@
 convert_to_degree = 180/pi;
 elavator_angle = -45;
-t_span = [0 10];      %Time period
+t_span = [0 15];      %Time period
 Y_init = [   0       % Velocity(V)
              0       % Angle of descent(gramma) -30*pi/180
              0       % Pitch rate(q)
              0       % Pitch angle(theta) 20*pi/180
-             0       % height(h)
+             15       % height(h)
              0];     % horizontal distance(r)
 
 figure(1)
@@ -16,6 +16,7 @@ for i = 1:4
     plot(Y1(:,6),Y1(:,5)); 
     hold on 
 end
+ylim([0 22])
 xlabel('Horizontal Distance [m]') 
 ylabel('Vetical Distance [m]') 
 title("Simulated DSL Trajectory [\delta = -45]")
@@ -58,10 +59,12 @@ for i = 1:7
     plot(Y1(:,6),Y1(:,5)); 
     hold on 
 end
+ylim([0 20])
 xlabel('Horizontal Distance [m]') 
 ylabel('Vetical Distance [m]') 
 title("Simulated DSL Trajectory [Each Elevator Angle]")
 legend('-15', '-25', '-35', '-45', '-55', '-65', '-75')
 hold off
+
 
 
