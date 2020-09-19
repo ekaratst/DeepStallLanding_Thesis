@@ -66,5 +66,26 @@ title("Simulated DSL Trajectory [Each Elevator Angle]")
 legend('-15', '-25', '-35', '-45', '-55', '-65', '-75')
 hold off
 
-
+% figure(5)
+% Y_init(1) = 15;
+% if T1 >=0
+%     elavator_angle = -45;
+%     [T1,Y1] = ode45(@(t,y) longitudinal_equation(t,y,elavator_angle(i)),t_span,Y_init);  
+% else
+%     elavator_angle = -65;
+%     [T1,Y1] = ode45(@(t,y) longitudinal_equation(t,y,elavator_angle(i)),t_span,Y_init);  
+% end
+% plot(Y1(:,6),Y1(:,5)); 
+% 
+% elavator_angle = [0, 1, 2.5, 5, 5.2, 10];
+% p7vals = [pi/9, 0.3, exp(-1), sqrt(2), -3];  %one fewer
+% num_interval = length(p7vals);
+% t = cell(num_interval,1);
+% x = cell(num_interval, 1);
+% for idx = 1 : num_interval
+%     p7 = p7vals(idx);
+%     [t{idx},x{idx}] = ode45(@(t,x) try_eqns(t, x, p7), elavator_angle(idx:idx+1), x0);
+%     x0 = x{idx}(end,:);
+% end
+% 
 
