@@ -7,6 +7,12 @@ function dy = longitudinal_equation(t,y,elevator_angle)
     h = y(5);
     r = y(6);
     
+    if t > 5
+        elevator_angle = -25;
+    else
+        elevator_angle = -45;
+    end
+    
     convert_to_rad = pi/180;
 
     %---------input--------------------------------

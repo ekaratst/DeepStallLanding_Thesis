@@ -1,4 +1,4 @@
-function dy = longitudinal_equation(t,y,elevator_angle)
+function dy = longitudinal_equation(t,y,elavator_angle)
     dy = zeros(6,1);
     V = y(1);
     gramma = y(2);
@@ -7,12 +7,19 @@ function dy = longitudinal_equation(t,y,elevator_angle)
     h = y(5);
     r = y(6);
     
+    if t > 7
+        elavator_angle = -85;
+%             disp('Done!');
+    else
+        elavator_angle = -45;
+    end
+    
     convert_to_rad = pi/180;
 
     %---------input--------------------------------
     alpha0 = 20 * convert_to_rad;
     alpha = theta* convert_to_rad - gramma* convert_to_rad; % alpha > alpha0(20)
-    delta = elevator_angle * convert_to_rad;
+    delta = elavator_angle * convert_to_rad;
     T = 0;
     %-----------------------------------------------
 
@@ -44,6 +51,14 @@ function dy = longitudinal_equation(t,y,elevator_angle)
     L = 0.5*p*S*(V^2)*(CL + ((CLq*c*q)/(2*V)) + CLdelta*delta);
     D = 0.5*p*S*(V^2)*(CD + ((CDq*c*q)/(2*V)) + CDdelta*delta);
     M = 0.5*p*S*(V^2)*c*(CM + ((CMq*c*q)/(2*V)) + CMdelta*delta);
+
+%     persistent n
+%     if isempty(n)
+%         n = 0;
+%     end
+%         n = n+1;
+%     disp(n)
+%     
  
     dy(1) = (T*cos(alpha) - D - m*g*sin(gramma)) / m;
     dy(2) = (T*sin(alpha) + L - m*g*cos(gramma)) / (m*V);
